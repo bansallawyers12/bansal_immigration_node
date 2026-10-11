@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
   const storedPhone = country ? `${country}${phone}` : phone;
   await query(
     `INSERT INTO contacts (name, contact_email, contact_phone, subject, message, status, form_source, ip_address, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, 'new', ?, ?, NOW(), NOW())`,
+     VALUES (?, ?, ?, ?, ?, 'unread', ?, ?, NOW(), NOW())`,
     [name, email, storedPhone, subject, message, body.form_source || "contact", ip],
   );
 
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     mailed = false;
   }
 
-  if (!mailed && (process.env.GMAIL_MAIL_USERNAME || process.env.GMAIL_MAIL_PASSWORD)) {
+  if (!mailed) {
     return NextResponse.json(
       { success: false, message: "Your enquiry was saved, but the notification email could not be sent." },
       { status: 502 },

@@ -80,7 +80,16 @@ export function BookingForm() {
         >
           <option value="education">Education</option>
           <option value="tourist">Tourist</option>
-          <option value="migration">Migration</option>
+          <option value="tr">Skilled migration</option>
+          <option value="pr_complex">Family and other visas</option>
+        </select>
+      </label>
+      <label className="block text-sm font-medium">
+        Meeting
+        <select name="meeting_type" required className="mt-1 w-full rounded border px-3 py-2">
+          <option value="phone">Phone</option>
+          <option value="in-person">In person</option>
+          <option value="video-call">Video call</option>
         </select>
       </label>
       <label className="block text-sm font-medium">

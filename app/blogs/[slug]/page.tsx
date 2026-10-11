@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Photo } from "@/components/media/Photo";
 import { getBlog } from "@/lib/content";
@@ -17,7 +18,15 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   };
 }
 
-export default async function BlogDetailPage({ params }: { params: Promise<Params> }) {
+export default function BlogDetailPage({ params }: { params: Promise<Params> }) {
+  return (
+    <Suspense fallback={<p className="mx-auto max-w-3xl px-4 py-16 text-sg-medium-gray">Loading article…</p>}>
+      <BlogArticle params={params} />
+    </Suspense>
+  );
+}
+
+async function BlogArticle({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
   const post = await getBlog(slug);
   if (!post) notFound();

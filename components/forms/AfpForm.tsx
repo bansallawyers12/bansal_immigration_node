@@ -36,12 +36,28 @@ export function AfpForm() {
         <input name="date_of_birth" type="date" required className="mt-1 w-full rounded border px-3 py-2" />
       </label>
       <label className="block text-sm font-medium">
+        Place of birth
+        <input name="birth_place" required className="mt-1 w-full rounded border px-3 py-2" />
+      </label>
+      <label className="block text-sm font-medium">
+        Citizenship
+        <input name="citizenship" required className="mt-1 w-full rounded border px-3 py-2" />
+      </label>
+      <label className="block text-sm font-medium">
+        Address history
+        <textarea name="address_history" required className="mt-1 min-h-24 w-full rounded border px-3 py-2" />
+      </label>
+      <label className="block text-sm font-medium">
         Purpose
         <input name="purpose" required className="mt-1 w-full rounded border px-3 py-2" />
       </label>
       <label className="block text-sm font-medium">
-        Identity document
+        Primary identity document
         <input name="primary_id" type="file" required className="mt-1 w-full" />
+      </label>
+      <label className="block text-sm font-medium">
+        Secondary identity document
+        <input name="secondary_id" type="file" required className="mt-1 w-full" />
       </label>
       {message ? <p className="text-sm text-sg-navy">{message}</p> : null}
       <button type="submit" className="rounded bg-sg-light-blue px-5 py-2 font-semibold text-white">

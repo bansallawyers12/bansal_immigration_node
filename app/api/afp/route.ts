@@ -11,30 +11,53 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, message: "Too many applications." }, { status: 429 });
   }
   const form = await request.formData();
-  const file = form.get("primary_id");
-  if (!(file instanceof File)) {
-    return NextResponse.json({ success: false, message: "Upload an identity document." }, { status: 422 });
+  const primary = form.get("primary_id");
+  const secondary = form.get("secondary_id");
+  const birthPlace = text(form.get("birth_place"));
+  const citizenship = text(form.get("citizenship"));
+  const address = text(form.get("address_history"));
+  if (!(primary instanceof File) || !(secondary instanceof File) || !birthPlace || !citizenship || !address) {
+    return NextResponse.json(
+      { success: false, message: "Complete the identity, address, and both document fields." },
+      { status: 422 },
+    );
   }
   const reference = randomBytes(6).toString("hex");
-  const folder = path.join(process.cwd(), "storage", "afp", reference);
-  await mkdir(folder, { recursive: true });
-  const stored = path.join(folder, file.name.replace(/[^a-zA-Z0-9._-]/g, "_"));
-  await writeFile(stored, Buffer.from(await file.arrayBuffer()));
+  const primaryPath = await storeFile(reference, "primary", primary);
+  const secondaryPath = await storeFile(reference, "secondary", secondary);
   await query(
     `INSERT INTO afp_applications
-      (reference, purpose, email, phone, first_names, family_name, date_of_birth, primary_id_path, status, ip_address, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'submitted', ?, NOW(), NOW())`,
+      (reference, purpose, email, phone, first_names, family_name, date_of_birth, birth_place, citizenship,
+       address_history, primary_id_path, secondary_id_path, status, ip_address, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'submitted', ?, NOW(), NOW())`,
     [
       reference,
-      String(form.get("purpose") || ""),
-      String(form.get("email") || ""),
-      String(form.get("phone") || ""),
-      String(form.get("first_names") || ""),
-      String(form.get("family_name") || ""),
-      String(form.get("date_of_birth") || ""),
-      stored,
+      text(form.get("purpose")) || "visa-citizenship",
+      text(form.get("email")),
+      text(form.get("phone")),
+      text(form.get("first_names")),
+      text(form.get("family_name")),
+      text(form.get("date_of_birth")),
+      birthPlace,
+      citizenship,
+      JSON.stringify([{ address }]),
+      primaryPath,
+      secondaryPath,
       ip,
     ],
   );
   return NextResponse.json({ success: true, message: "Application saved. Staff will review it." });
+}
+
+async function storeFile(reference: string, role: string, file: File): Promise<string> {
+  const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80) || "document";
+  const relative = path.posix.join("storage", "afp", reference, `${role}-${safe}`);
+  const absolute = path.join(process.cwd(), "storage", "afp", reference, `${role}-${safe}`);
+  await mkdir(path.dirname(absolute), { recursive: true });
+  await writeFile(absolute, Buffer.from(await file.arrayBuffer()));
+  return relative;
+}
+
+function text(value: FormDataEntryValue | null): string {
+  return typeof value === "string" ? value.trim() : "";
 }

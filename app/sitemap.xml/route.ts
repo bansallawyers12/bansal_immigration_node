@@ -1,6 +1,6 @@
 import { listActiveBlogSlugs, listActivePages, listActiveStorySlugs } from "@/lib/content";
 import { canonicalUrl, indianPccEnabled } from "@/lib/site";
-import { publicPath } from "@/lib/visa-catalog";
+import { hrefForStoredPage } from "@/lib/visa-catalog";
 
 const staticPaths = [
   "/",
@@ -32,9 +32,8 @@ export async function GET() {
   try {
     const pages = await listActivePages();
     for (const page of pages) {
-      if (page.slug === page.category) continue;
-      const prefix = page.category === "business-visa" ? "business-visas" : page.category;
-      urls.push(publicPath(prefix, page.slug, page.category));
+      if (!page.category || !page.slug) continue;
+      urls.push(hrefForStoredPage(page.category, page.slug));
     }
     for (const blog of await listActiveBlogSlugs()) urls.push(`/blogs/${blog.slug}`);
     for (const story of await listActiveStorySlugs()) urls.push(`/success-stories/${story.slug}`);

@@ -134,6 +134,16 @@ export function publicPath(prefix: string, slug: string, categorySlug: string): 
   return `/${prefix}/${slug}`;
 }
 
+/** Public URL for a stored page, including slug aliases such as subclass names. */
+export function hrefForStoredPage(dbCategory: string, dbSlug: string): string {
+  const prefix = dbCategory === "business-visa" ? "business-visas" : dbCategory;
+  const alias = Object.entries(slugAliases).find(
+    ([path, slug]) => slug === dbSlug && path.startsWith(`/${prefix}/`),
+  );
+  if (alias) return alias[0];
+  return publicPath(prefix, dbSlug, dbCategory);
+}
+
 export function resolveLookup(prefix: string, urlSlug: string | null): PageLookup | null {
   if (!cmsCategories.has(prefix)) return null;
   const path = urlSlug ? `/${prefix}/${urlSlug}` : `/${prefix}`;

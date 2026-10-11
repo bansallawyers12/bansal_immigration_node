@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getStory } from "@/lib/content";
 import { sanitizeContent } from "@/lib/sanitize";
@@ -16,7 +17,15 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   };
 }
 
-export default async function SuccessStoryPage({ params }: { params: Promise<Params> }) {
+export default function SuccessStoryPage({ params }: { params: Promise<Params> }) {
+  return (
+    <Suspense fallback={<p className="mx-auto max-w-3xl px-4 py-16 text-sg-medium-gray">Loading story…</p>}>
+      <StoryArticle params={params} />
+    </Suspense>
+  );
+}
+
+async function StoryArticle({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
   const story = await getStory(slug);
   if (!story) notFound();

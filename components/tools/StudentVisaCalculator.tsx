@@ -8,6 +8,10 @@ const living = {
   child: 4449,
 } as const;
 
+function aud(value: number): string {
+  return value.toLocaleString("en-AU");
+}
+
 export function StudentVisaCalculator() {
   const [partner, setPartner] = useState(false);
   const [children, setChildren] = useState(0);
@@ -23,8 +27,8 @@ export function StudentVisaCalculator() {
     <div className="mx-auto max-w-3xl px-4 py-12">
       <h1 className="text-3xl font-bold text-sg-navy">Student Visa Financial Calculator</h1>
       <p className="mt-3 text-sg-dark-gray">
-        Estimate funds using the published 12-month living cost: applicant ${living.student.toLocaleString()}, partner $
-        {living.partner.toLocaleString()}, each child ${living.child.toLocaleString()}, plus travel and tuition you enter.
+        Estimate funds using the published 12-month living cost: applicant ${aud(living.student)}, partner $
+        {aud(living.partner)}, each child ${aud(living.child)}, plus travel and tuition you enter.
       </p>
       <form className="mt-8 space-y-4">
         <label className="flex items-center gap-2 text-sm font-medium">
@@ -62,7 +66,7 @@ export function StudentVisaCalculator() {
           />
         </label>
       </form>
-      <p className="mt-8 text-2xl font-bold text-sg-navy">Estimated funds: ${funds.toLocaleString()} AUD</p>
+      <p className="mt-8 text-2xl font-bold text-sg-navy">Estimated funds: ${aud(funds)} AUD</p>
     </div>
   );
 }

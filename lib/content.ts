@@ -2,7 +2,7 @@ import { cacheLife } from "next/cache";
 import { query } from "@/lib/db";
 import { mediaUrl } from "@/lib/media";
 import { asArray, asRecord, asStringList, flag, text } from "@/lib/parse";
-import { publicPath } from "@/lib/visa-catalog";
+import { hrefForStoredPage } from "@/lib/visa-catalog";
 import type {
   BlogPost,
   BlogSummary,
@@ -89,11 +89,7 @@ export async function getCategoryIndex(category: string): Promise<CmsPageRecord 
   return fallback[0] ? mapPage(fallback[0]) : null;
 }
 
-export async function getRelatedPages(
-  category: string,
-  pageId: number,
-  publicPrefix: string,
-): Promise<RelatedPage[]> {
+export async function getRelatedPages(category: string, pageId: number): Promise<RelatedPage[]> {
   "use cache";
   cacheLife("hours");
   const rows = await query<PageRow>(
@@ -108,7 +104,7 @@ export async function getRelatedPages(
     slug: text(row.slug),
     category: text(row.category),
     excerpt: row.excerpt == null ? null : text(row.excerpt),
-    href: publicPath(publicPrefix, text(row.slug), category),
+    href: hrefForStoredPage(text(row.category), text(row.slug)),
   }));
 }
 

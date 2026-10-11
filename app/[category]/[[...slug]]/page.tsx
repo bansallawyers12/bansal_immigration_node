@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound, permanentRedirect } from "next/navigation";
 import { CmsArticle } from "@/components/pages/CmsArticle";
 import { StaticHub } from "@/components/pages/StaticHubs";
@@ -46,7 +47,15 @@ export async function generateMetadata({
   };
 }
 
-export default async function CategoryPage({ params }: { params: Promise<Params> }) {
+export default function CategoryPage({ params }: { params: Promise<Params> }) {
+  return (
+    <Suspense fallback={<p className="mx-auto max-w-6xl px-4 py-16 text-sg-medium-gray">Loading page…</p>}>
+      <CategoryContent params={params} />
+    </Suspense>
+  );
+}
+
+async function CategoryContent({ params }: { params: Promise<Params> }) {
   const { category, slug } = await params;
   if (!cmsCategories.has(category)) notFound();
   if (slug && slug.length > 1) notFound();
@@ -68,7 +77,7 @@ export default async function CategoryPage({ params }: { params: Promise<Params>
     : await getCategoryIndex(lookup.dbCategory);
   if (!page) notFound();
 
-  const related = await getRelatedPages(lookup.dbCategory, page.id, lookup.publicPrefix);
+  const related = await getRelatedPages(lookup.dbCategory, page.id);
   const template = chooseTemplate(page.template, lookup.dbCategory, lookup.templateOverride);
   return <CmsArticle page={page} related={related} publicPrefix={lookup.publicPrefix} template={template} />;
 }

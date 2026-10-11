@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import { Photo } from "@/components/media/Photo";
 import { listBlogs } from "@/lib/content";
@@ -8,11 +9,19 @@ export const metadata: Metadata = {
   description: "Immigration news, visa updates, and guidance from Bansal Immigration.",
 };
 
-export default async function BlogsPage({
+export default function BlogsPage({
   searchParams,
 }: {
   searchParams: Promise<{ page?: string }>;
 }) {
+  return (
+    <Suspense fallback={<p className="mx-auto max-w-6xl px-4 py-16 text-sg-medium-gray">Loading articles…</p>}>
+      <BlogList searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+async function BlogList({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const params = await searchParams;
   const page = Math.max(1, Number(params.page ?? 1) || 1);
   const perPage = 12;
