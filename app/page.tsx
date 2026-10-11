@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { Photo } from "@/components/media/Photo";
 import { getHomeContent } from "@/lib/content";
 import { site } from "@/lib/site";
@@ -217,6 +218,14 @@ export default async function Home() {
               Contact Our Team
             </Link>
           </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-7xl px-4 text-center">
+          <h2 className="text-3xl font-bold text-sg-navy">Immigration news and updates</h2>
+          <p className="mt-3 text-sg-medium-gray">Subscribe for visa changes and study pathways (no spam).</p>
+          <NewsletterForm />
         </div>
       </section>
 

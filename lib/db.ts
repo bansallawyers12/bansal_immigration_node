@@ -31,3 +31,18 @@ export async function query<T>(sql: string, params: unknown[] = []): Promise<T[]
   const [rows] = await getPool().query(sql, params);
   return rows as T[];
 }
+
+export async function withTransaction<T>(fn: (connection: mysql.PoolConnection) => Promise<T>): Promise<T> {
+  const connection = await getPool().getConnection();
+  try {
+    await connection.beginTransaction();
+    const result = await fn(connection);
+    await connection.commit();
+    return result;
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally {
+    connection.release();
+  }
+}

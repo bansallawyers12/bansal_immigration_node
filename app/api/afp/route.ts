@@ -3,7 +3,9 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { sendZoho } from "@/lib/mail";
 import { hitRateLimit } from "@/lib/rate-limit";
+import { site } from "@/lib/site";
 
 export async function POST(request: NextRequest) {
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
@@ -46,6 +48,16 @@ export async function POST(request: NextRequest) {
       ip,
     ],
   );
+  try {
+    await sendZoho({
+      to: site.email,
+      subject: `New AFP application ${reference}`,
+      text: `Reference: ${reference}\nApplicant: ${text(form.get("first_names"))} ${text(form.get("family_name"))}\nEmail: ${text(form.get("email"))}`,
+    });
+  } catch {
+    // Notification failure must not undo the saved application.
+  }
+
   return NextResponse.json({ success: true, message: "Application saved. Staff will review it." });
 }
 

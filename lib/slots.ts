@@ -2,7 +2,7 @@ import { query } from "@/lib/db";
 import { asArray, flag, text } from "@/lib/parse";
 
 const ADELAIDE_LANE = new Set(["education", "tourist"]);
-export const ENQUIRY_TYPES = ["tr", "tourist", "education", "pr_complex", "ajay", "kunal"] as const;
+export const ENQUIRY_TYPES = ["tr", "tourist", "education", "pr_complex", "ajay", "kunal", "arun"] as const;
 export const MEETING_TYPES = ["phone", "in-person", "video-call"] as const;
 
 export function isEnquiryType(value: string): value is (typeof ENQUIRY_TYPES)[number] {

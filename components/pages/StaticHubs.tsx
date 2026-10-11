@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CelebrityHub } from "@/components/pages/CelebrityHub";
 
 const hubs: Record<
   string,
@@ -116,6 +117,7 @@ export function hubMetadata(path: string): Metadata {
 }
 
 export function StaticHub({ path }: { path: string }) {
+  if (path === "/celebrity-visas") return <CelebrityHub />;
   const hub = hubs[path];
   if (!hub) notFound();
   return (

@@ -1,66 +1,113 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
-const agePoints = [
-  [18, 24, 25],
-  [25, 32, 30],
-  [33, 39, 25],
-  [40, 44, 15],
-] as const;
+import { calculatePrPoints, prPointCalculatorLists } from "@/lib/pr-calculator";
 
 export function PrPointCalculator() {
+  const lists = prPointCalculatorLists;
   const [age, setAge] = useState(30);
   const [english, setEnglish] = useState(10);
   const [overseas, setOverseas] = useState(0);
   const [australian, setAustralian] = useState(0);
-  const [education, setEducation] = useState(15);
-  const [australianStudy, setAustralianStudy] = useState(0);
-  const [specialist, setSpecialist] = useState(0);
-  const [community, setCommunity] = useState(0);
-  const [partner, setPartner] = useState(10);
-  const [nomination, setNomination] = useState(0);
-  const [professionalYear, setProfessionalYear] = useState(0);
+  const [educationIndex, setEducationIndex] = useState(1);
+  const [additionalIndexes, setAdditionalIndexes] = useState<number[]>([]);
+  const [partnerIndex, setPartnerIndex] = useState(0);
 
-  const ageScore = useMemo(() => {
-    const band = agePoints.find(([min, max]) => age >= min && age <= max);
-    return band ? band[2] : 0;
+  const agePoints = useMemo(() => {
+    if (age < 18) return 0;
+    if (age <= 24) return 25;
+    if (age <= 32) return 30;
+    if (age <= 39) return 25;
+    if (age <= 44) return 15;
+    return 0;
   }, [age]);
 
-  const total =
-    ageScore +
-    english +
-    overseas +
-    australian +
-    education +
-    australianStudy +
-    specialist +
-    community +
-    partner +
-    nomination +
-    professionalYear;
+  const result = useMemo(
+    () =>
+      calculatePrPoints({
+        age: agePoints,
+        english_language_proficiency: english,
+        educational_qualifications: lists.educational_qualifications[educationIndex].value,
+        skilled_employment_overseas: overseas,
+        skilled_employment_australia: australian,
+        additional_points: additionalIndexes.map((index) => lists.additional_points[index].value),
+        partner_spouse_status: lists.partner_spouse_status[partnerIndex].value,
+      }),
+    [
+      agePoints,
+      english,
+      educationIndex,
+      overseas,
+      australian,
+      additionalIndexes,
+      partnerIndex,
+      lists.additional_points,
+      lists.educational_qualifications,
+      lists.partner_spouse_status,
+    ],
+  );
+
+  function toggleAdditional(index: number) {
+    setAdditionalIndexes((current) =>
+      current.includes(index) ? current.filter((item) => item !== index) : [...current, index],
+    );
+  }
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
       <h1 className="text-3xl font-bold text-sg-navy">PR Points Calculator</h1>
       <p className="mt-3 text-sg-dark-gray">
-        Estimate points for skilled migration. This uses the same point bands published on the current site.
+        Estimate skilled migration points using the same bands as the live site and CRM API.
       </p>
       <form className="mt-8 space-y-4">
         <Field label="Age" value={age} onChange={setAge} />
-        <Select label="English" value={english} onChange={setEnglish} options={[[0, "Competent (0)"], [10, "Proficient (10)"], [20, "Superior (20)"]]} />
-        <Select label="Overseas skilled employment" value={overseas} onChange={setOverseas} options={[[0, "Less than 3 years (0)"], [5, "3–4 years (5)"], [10, "5–7 years (10)"], [15, "8+ years (15)"]]} />
-        <Select label="Australian skilled employment" value={australian} onChange={setAustralian} options={[[0, "Less than 1 year (0)"], [5, "1–2 years (5)"], [10, "3–4 years (10)"], [15, "5–7 years (15)"], [20, "8+ years (20)"]]} />
-        <Select label="Education" value={education} onChange={setEducation} options={[[10, "Diploma / trade (10)"], [15, "Bachelor / masters (15)"], [20, "Doctorate (20)"]]} />
-        <Select label="Australian study" value={australianStudy} onChange={setAustralianStudy} options={[[0, "No (0)"], [5, "Yes (5)"]]} />
-        <Select label="Specialist education" value={specialist} onChange={setSpecialist} options={[[0, "No (0)"], [5, "Other specialist qualification (5)"], [10, "Australian research masters or doctorate in STEM (10)"]]} />
-        <Select label="Regional study" value={community} onChange={setCommunity} options={[[0, "No (0)"], [5, "Yes (5)"]]} />
-        <Select label="Partner" value={partner} onChange={setPartner} options={[[10, "Single, or partner with skills (10)"], [5, "Partner is a citizen or PR, or has competent English (5)"], [0, "Partner without these points (0)"]]} />
-        <Select label="Nomination" value={nomination} onChange={setNomination} options={[[0, "None (0)"], [5, "State nomination 190 (5)"], [15, "Regional nomination 491 (15)"]]} />
-        <Select label="Professional year" value={professionalYear} onChange={setProfessionalYear} options={[[0, "No (0)"], [5, "Yes (5)"]]} />
+        <p className="text-sm text-gray-600">Age points: {agePoints}</p>
+        <Select
+          label="English"
+          value={english}
+          onChange={setEnglish}
+          options={lists.english_language_proficiency.map((item) => [item.value, item.label])}
+        />
+        <Select
+          label="Overseas skilled employment"
+          value={overseas}
+          onChange={setOverseas}
+          options={lists.skilled_employment_overseas.map((item) => [item.value, item.label])}
+        />
+        <Select
+          label="Australian skilled employment"
+          value={australian}
+          onChange={setAustralian}
+          options={lists.skilled_employment_australia.map((item) => [item.value, item.label])}
+        />
+        <Select
+          label="Education"
+          value={educationIndex}
+          onChange={setEducationIndex}
+          options={lists.educational_qualifications.map((item, index) => [index, item.label])}
+        />
+        <fieldset className="space-y-2">
+          <legend className="text-sm font-medium text-sg-navy">Additional points (select all that apply)</legend>
+          {lists.additional_points.map((item, index) => (
+            <label key={item.label} className="flex items-start gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={additionalIndexes.includes(index)}
+                onChange={() => toggleAdditional(index)}
+              />
+              <span>{item.label}</span>
+            </label>
+          ))}
+        </fieldset>
+        <Select
+          label="Partner / spouse"
+          value={partnerIndex}
+          onChange={setPartnerIndex}
+          options={lists.partner_spouse_status.map((item, index) => [index, item.label])}
+        />
       </form>
-      <p className="mt-8 text-2xl font-bold text-sg-navy">Total points: {total}</p>
-      <p className="mt-2 text-sm text-gray-600">Age points for the selected age: {ageScore}.</p>
+      <p className="mt-8 text-2xl font-bold text-sg-navy">Total points: {result.total_points}</p>
+      <p className="mt-2 text-sm text-gray-600">{result.message}</p>
     </div>
   );
 }
