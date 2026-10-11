@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { resetTurnstile, TurnstileWidget } from "@/components/forms/TurnstileWidget";
 
 const interests = [
   "Information Technology",
@@ -11,19 +12,26 @@ const interests = [
   "Not sure yet",
 ];
 
-export function LpEnquiryForm() {
+export function LpEnquiryForm({ siteKey }: { siteKey: string | null }) {
   const [error, setError] = useState("");
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    const form = new FormData(event.currentTarget);
+    const formEl = event.currentTarget;
+    const form = new FormData(formEl);
+    if (siteKey && !String(form.get("cf-turnstile-response") || "").trim()) {
+      setError("Please complete the security verification.");
+      return;
+    }
     const response = await fetch("/lp/enquire", { method: "POST", body: form });
     if (response.redirected) {
       window.location.href = response.url;
       return;
     }
-    setError("We could not submit your enquiry. Please try again.");
+    resetTurnstile(formEl);
+    const data = (await response.json().catch(() => null)) as { message?: string } | null;
+    setError(data?.message || "We could not submit your enquiry. Please try again.");
   }
 
   return (
@@ -53,6 +61,7 @@ export function LpEnquiryForm() {
         Message
         <textarea name="message" rows={4} maxLength={2000} className="mt-1 w-full rounded border px-3 py-2" />
       </label>
+      <TurnstileWidget siteKey={siteKey} />
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       <button type="submit" className="rounded-lg bg-blue-700 px-6 py-3 font-semibold text-white">
         Get free counselling

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (request.method === "POST" && request.nextUrl.pathname === "/contact") {
     return NextResponse.rewrite(new URL("/api/contact", request.url));
   }

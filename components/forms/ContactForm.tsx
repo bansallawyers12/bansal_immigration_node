@@ -2,8 +2,9 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { resetTurnstile, TurnstileWidget } from "@/components/forms/TurnstileWidget";
 
-export function ContactForm() {
+export function ContactForm({ siteKey }: { siteKey: string | null }) {
   const router = useRouter();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -12,7 +13,13 @@ export function ContactForm() {
     event.preventDefault();
     setPending(true);
     setError("");
-    const form = new FormData(event.currentTarget);
+    const formEl = event.currentTarget;
+    const form = new FormData(formEl);
+    if (siteKey && !String(form.get("cf-turnstile-response") || "").trim()) {
+      setPending(false);
+      setError("Please complete the security verification.");
+      return;
+    }
     const response = await fetch("/contact", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -21,6 +28,7 @@ export function ContactForm() {
     const data = (await response.json()) as { success?: boolean; message?: string; errors?: Record<string, string> };
     setPending(false);
     if (!response.ok || !data.success) {
+      resetTurnstile(formEl);
       setError(data.message || Object.values(data.errors ?? {}).join(" ") || "The form could not be sent.");
       return;
     }
@@ -47,6 +55,7 @@ export function ContactForm() {
         <textarea name="message" required maxLength={5000} className="mt-1 min-h-32 w-full rounded border px-3 py-2" />
       </label>
       <input type="hidden" name="form_source" value="contact" />
+      <TurnstileWidget siteKey={siteKey} />
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
       <button type="submit" disabled={pending} className="rounded bg-sg-light-blue px-5 py-2 font-semibold text-white">
         {pending ? "Sending..." : "Send message"}

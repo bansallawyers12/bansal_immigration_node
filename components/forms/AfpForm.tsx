@@ -1,15 +1,22 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { resetTurnstile, TurnstileWidget } from "@/components/forms/TurnstileWidget";
 
-export function AfpForm() {
+export function AfpForm({ siteKey }: { siteKey: string | null }) {
   const [message, setMessage] = useState("");
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const formEl = event.currentTarget;
+    const form = new FormData(formEl);
+    if (siteKey && !String(form.get("cf-turnstile-response") || "").trim()) {
+      setMessage("Please complete the security verification.");
+      return;
+    }
     const response = await fetch("/api/afp", { method: "POST", body: form });
     const data = (await response.json()) as { success?: boolean; message?: string };
+    if (!data.success) resetTurnstile(formEl);
     setMessage(data.message || (data.success ? "Application saved." : "Could not save the application."));
   }
 
@@ -59,6 +66,7 @@ export function AfpForm() {
         Secondary identity document
         <input name="secondary_id" type="file" required className="mt-1 w-full" />
       </label>
+      <TurnstileWidget siteKey={siteKey} />
       {message ? <p className="text-sm text-sg-navy">{message}</p> : null}
       <button type="submit" className="rounded bg-sg-light-blue px-5 py-2 font-semibold text-white">
         Submit application

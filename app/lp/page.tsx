@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LpEnquiryForm } from "@/components/forms/LpEnquiryForm";
+import { TurnstileForm } from "@/components/forms/TurnstileForm";
 
 export const metadata: Metadata = {
   title: { absolute: "Study in Australia | Bansal Education" },
@@ -23,7 +24,7 @@ export default function LpPage() {
             <h2 className="text-2xl font-bold text-sg-navy">Book your free consultation</h2>
             <p className="mt-2 text-sg-medium-gray">Tell us about your goals and we will shortlist courses that fit your budget.</p>
             <div className="mt-6">
-              <LpEnquiryForm />
+              <TurnstileForm form={LpEnquiryForm} />
             </div>
           </section>
           <section className="space-y-6">

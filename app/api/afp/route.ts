@@ -6,6 +6,7 @@ import { query } from "@/lib/db";
 import { sendZoho } from "@/lib/mail";
 import { hitRateLimit } from "@/lib/rate-limit";
 import { site } from "@/lib/site";
+import { requestHost, verifyTurnstile } from "@/lib/turnstile";
 
 export async function POST(request: NextRequest) {
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
@@ -13,6 +14,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, message: "Too many applications." }, { status: 429 });
   }
   const form = await request.formData();
+  const host = requestHost(request.headers.get("host"), request.headers.get("x-forwarded-host"));
+  const turnstileError = await verifyTurnstile(text(form.get("cf-turnstile-response")), ip, host);
+  if (turnstileError) {
+    return NextResponse.json({ success: false, message: turnstileError }, { status: 422 });
+  }
   const primary = form.get("primary_id");
   const secondary = form.get("secondary_id");
   const birthPlace = text(form.get("birth_place"));

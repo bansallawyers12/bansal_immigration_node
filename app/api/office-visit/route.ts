@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { requestHost, verifyTurnstile } from "@/lib/turnstile";
 
 export async function POST(request: NextRequest) {
   const body = (await request.json().catch(() => null)) as Record<string, string> | null;
   if (!body?.first_name || !body.last_name || !body.email || !body.phone) {
     return NextResponse.json({ success: false, message: "Name, email, and phone are required." }, { status: 422 });
+  }
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
+  const host = requestHost(request.headers.get("host"), request.headers.get("x-forwarded-host"));
+  const turnstileError = await verifyTurnstile(body["cf-turnstile-response"], ip, host);
+  if (turnstileError) {
+    return NextResponse.json({ success: false, message: turnstileError }, { status: 422 });
   }
   await query(
     `INSERT INTO office_visit_forms (first_name, last_name, email, phone, created_at, updated_at)

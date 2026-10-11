@@ -3,6 +3,7 @@ import { query } from "@/lib/db";
 import { sendGmail } from "@/lib/mail";
 import { hitRateLimit } from "@/lib/rate-limit";
 import { site } from "@/lib/site";
+import { requestHost, verifyTurnstile } from "@/lib/turnstile";
 
 const countryCodes = new Set([
   "+61", "+1", "+44", "+91", "+86", "+81", "+82", "+65", "+60", "+66", "+63", "+64",
@@ -36,9 +37,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, errors }, { status: 422 });
   }
 
-  const turnstileOk = await verifyTurnstile(body["cf-turnstile-response"], ip);
-  if (!turnstileOk) {
-    return NextResponse.json({ success: false, message: "Security verification failed." }, { status: 422 });
+  const host = requestHost(request.headers.get("host"), request.headers.get("x-forwarded-host"));
+  const turnstileError = await verifyTurnstile(body["cf-turnstile-response"], ip, host);
+  if (turnstileError) {
+    return NextResponse.json({ success: false, message: turnstileError }, { status: 422 });
   }
 
   const storedPhone = country ? `${country}${phone}` : phone;
@@ -71,21 +73,4 @@ export async function POST(request: NextRequest) {
 
 function oneLine(value: string | undefined): string {
   return (value || "").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, 255);
-}
-
-async function verifyTurnstile(token: string | undefined, ip: string): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY;
-  const siteKey = process.env.TURNSTILE_SITE_KEY;
-  const local = process.env.TURNSTILE_ENABLE_ON_LOCAL === "true";
-  const host = process.env.NEXT_PUBLIC_SITE_URL || "";
-  const isLocal = host.includes("localhost") || host.includes("127.0.0.1");
-  if (!secret || !siteKey || (isLocal && !local)) return true;
-  if (!token) return false;
-  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ secret, response: token, remoteip: ip }),
-  });
-  const data = (await response.json()) as { success?: boolean };
-  return Boolean(data.success);
 }

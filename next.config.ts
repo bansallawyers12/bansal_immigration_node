@@ -4,6 +4,7 @@ import { visaRedirects } from "./lib/visa-catalog";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  allowedDevOrigins: ["127.0.0.1"],
   cacheComponents: true,
   partialPrefetching: true,
   async redirects() {

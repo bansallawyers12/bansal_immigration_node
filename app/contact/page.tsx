@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/forms/ContactForm";
+import { TurnstileForm } from "@/components/forms/TurnstileForm";
 
 export const metadata: Metadata = {
   title: { absolute: "Contact | Bansal Immigration" },
@@ -13,7 +14,7 @@ export default function ContactPage() {
       <p className="mt-3 text-sg-dark-gray">
         Send us your details and a registered migration agent will reply. You can also call +61 3 9602 1330.
       </p>
-      <ContactForm />
+      <TurnstileForm form={ContactForm} />
     </div>
   );
 }
