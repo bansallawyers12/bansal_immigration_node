@@ -1,0 +1,51 @@
+<svg width="400" height="250" viewBox="0 0 400 250" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+  <!-- Blue gradient background with rounded corners -->
+  <defs>
+    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2563EB;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="400" height="250" rx="12" ry="12" fill="url(#blueGradient)"/>
+  
+  <!-- White stylized "b" logo with signal waves -->
+  <g transform="translate(200, 125)">
+    <!-- Main "b" shape - more refined -->
+    <path d="M -25 -35 
+             L -25 -45 
+             Q -25 -50 -20 -50 
+             L 15 -50 
+             Q 25 -50 25 -40 
+             L 25 -5 
+             Q 25 5 15 5 
+             L -20 5 
+             Q -25 5 -25 0 
+             L -25 -35 Z" 
+          fill="white" 
+          opacity="0.95"/>
+    
+    <!-- Vertical stem of "b" - thicker -->
+    <rect x="-25" y="-45" width="8" height="50" rx="2" fill="white"/>
+    
+    <!-- Signal waves (three curved lines) -->
+    <path d="M 30 -30 Q 45 -30 55 -20" 
+          stroke="white" 
+          stroke-width="4" 
+          fill="none" 
+          stroke-linecap="round"
+          opacity="0.9"/>
+    <path d="M 30 -20 Q 50 -20 65 -5" 
+          stroke="white" 
+          stroke-width="4" 
+          fill="none" 
+          stroke-linecap="round"
+          opacity="0.9"/>
+    <path d="M 30 -10 Q 55 -10 75 5" 
+          stroke="white" 
+          stroke-width="4" 
+          fill="none" 
+          stroke-linecap="round"
+          opacity="0.9"/>
+  </g>
+</svg>

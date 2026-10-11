@@ -1,0 +1,44 @@
+﻿Visa Subclass,Visa Type,Stream,75% Processed In,90% Processed In
+600,Visitor,Tourist,24 days,37 days
+771,Transit,-,17 days,26 days
+124,Distinguished Talent,-,17 months,24 months
+189,Skilled – Independent,Points-tested stream,8 months,13 months
+190,Skilled – Nominated,-,24 months,25 months
+476,Skilled – Recognised Graduate,-,3 months,5 months
+485,Temporary Graduate,Graduate Work,5 months,8 months
+489,Skilled – Regional (Provisional),-,13 months,18 months
+491,Skilled Work Regional (Provisional),State/Territory Nominated,25 months,25 months
+494,Skilled Employer Sponsored Regional (Provisional),Labour Agreement,7 months,10 months
+858,Distinguished Talent,-,22 months,31 months
+887,Skilled – Regional,-,12 months,18 months
+132,Business Talent,Significant Business History,20 months,29 months
+188,Business Innovation and Investment (Provisional),Business Innovation,21 months,32 months
+890,Business Owner,-,14 months,18 months
+891,Investor,-,14 months,18 months
+892,State/Territory Sponsored Business Owner,-,14 months,18 months
+893,State/Territory Sponsored Business Investor,-,14 months,18 months
+186,Employer Nomination Scheme,Direct Entry,16 months,18 months
+400,Temporary Work (Short Stay Activity),Entertainment,2 months,3 months
+403,Temporary Work (International Relations),Domestic Worker (Diplomatic or Consular),2 months,4 months
+407,Training,-,5 months,8 months
+408,Temporary Activity,Entertainment,2 months,4 months
+417,Working Holiday,-,26 days,49 days
+462,Work and Holiday,-,33 days,64 days
+500,Student,Higher Education,5 months,7 months
+100,Partner,-,26 months,32 months
+101,Child,-,12 months,16 months
+102,Adoption,-,14 months,20 months
+117,Orphan Relative,-,14 months,22 months
+300,Prospective Marriage,-,15 months,20 months
+309,Partner (Provisional),-,22 months,28 months
+445,Dependent Child,-,14 months,20 months
+461,New Zealand Citizen Family Relationship (Temporary),-,9 months,13 months
+801,Partner,-,24 months,29 months
+802,Child,-,20 months,28 months
+820,Partner,-,22 months,29 months
+155,Five Year Resident Return,-,10 weeks,4 months
+157,Three Month Resident Return,-,10 weeks,4 months
+602,Medical Treatment,-,4 months,8 months
+Conferral (lodgement to ceremony),,,19 months,27 months
+Descent (lodgement to decision),,,64 days,5 months
+Evidence (lodgement to decision),,,16 days,27 days
