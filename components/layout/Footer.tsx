@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { cacheLife } from "next/cache";
 import { indianPccEnabled, site } from "@/lib/site";
 
 const services = [
@@ -25,13 +27,19 @@ const company = [
   ["/office-visit-form", "Book Office Visit"],
 ] as const;
 
-export function Footer() {
-  const year = new Date().getFullYear();
+async function copyrightYear() {
+  "use cache";
+  cacheLife("days");
+  return new Date().getFullYear();
+}
+
+export async function Footer() {
+  const year = await copyrightYear();
   return (
     <footer className="border-t border-gray-200 bg-white py-6">
       <div className="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 md:grid-cols-2 lg:grid-cols-5 lg:px-8">
         <div>
-          <img src="/img/logo/logo.avif" alt="Bansal Immigration" width={340} height={131} className="mb-2 h-16 w-auto object-contain" />
+          <Image src="/img/logo/logo.avif" alt="Bansal Immigration" width={340} height={131} className="mb-2 h-16 w-auto object-contain" />
           <div className="text-sm font-medium text-sg-light-blue">MARN Registered Migration Agents</div>
           <a
             href={site.phoneTel}

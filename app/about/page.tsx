@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Photo } from "@/components/media/Photo";
 import { getTeam } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -32,7 +33,7 @@ export default async function AboutPage() {
               Our commitment is encapsulated in our tagline: &quot;Your Future, Our Priority.&quot; We are dedicated to transforming your immigration aspirations into reality through expert guidance, personalized attention, and unwavering support throughout your journey.
             </p>
           </div>
-          <img src="/img/team/team-bansal-960.jpg" alt="Bansal Immigration Team" className="w-full rounded-2xl shadow-2xl" />
+          <Photo src="/img/team/team-bansal-960.jpg" alt="Bansal Immigration Team" className="w-full rounded-2xl shadow-2xl" />
         </div>
       </section>
       <section className="bg-gray-50 py-16">

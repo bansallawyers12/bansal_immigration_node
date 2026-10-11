@@ -265,6 +265,14 @@ export async function getActiveServices(): Promise<ServiceItem[]> {
 export async function getTeam(): Promise<TeamMember[]> {
   "use cache";
   cacheLife("hours");
+  try {
+    return await loadTeam();
+  } catch {
+    return [];
+  }
+}
+
+async function loadTeam(): Promise<TeamMember[]> {
   const rows = await query<PageRow>(
     `SELECT id, name, designation, marn, description, image, \`order\`
      FROM team_members WHERE is_active = 1 ORDER BY \`order\` ASC`,

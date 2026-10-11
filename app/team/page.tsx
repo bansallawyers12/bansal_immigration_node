@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Photo } from "@/components/media/Photo";
 import { getTeam } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default async function TeamPage() {
       <div className="mt-10 grid gap-8 md:grid-cols-2">
         {team.map((member) => (
           <article key={member.id} className="rounded-xl bg-white p-6 text-center shadow">
-            {member.image ? <img src={member.image} alt={member.name} className="mx-auto h-72 w-64 object-contain" /> : null}
+            {member.image ? <Photo src={member.image} alt={member.name} className="mx-auto h-72 w-64 object-contain" /> : null}
             <h2 className="mt-4 text-2xl font-bold text-sg-navy">{member.name}</h2>
             <p className="font-semibold text-sg-light-blue">
               {member.designation} {member.marn ? `(MARN: ${member.marn})` : ""}

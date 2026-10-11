@@ -1,20 +1,6 @@
 import type { NextConfig } from "next";
+import { legacyRedirects } from "./lib/legacy-redirects";
 import { visaRedirects } from "./lib/visa-catalog";
-
-const legacyRedirects: Record<string, string> = {
-  "/about-us": "/about",
-  "/contact-us": "/contact",
-  "/pr-calculator": "/migrate-to-australia/pr-point-calculator",
-  "/pr-point-calculator": "/migrate-to-australia/pr-point-calculator",
-  "/points-for-pr-australia": "/migrate-to-australia/pr-point-calculator",
-  "/canada": "/other-countries/canada",
-  "/new-zealand": "/other-countries/new-zealand",
-  "/usa": "/other-countries/usa",
-  "/people": "/team",
-  "/staff": "/team",
-  "/australia-immigration-changes-july-2025": "/blogs/latest-australian-immigration-updates-july-2025",
-  "/australian-immigration-changes-july-2025": "/blogs/latest-australian-immigration-updates-july-2025",
-};
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
@@ -30,6 +16,7 @@ const nextConfig: NextConfig = {
       ...exact,
       { source: "/public/:path*", destination: "/:path*", permanent: true },
       { source: "/booking/calendar/:path*", destination: "/book-an-appointment", permanent: true },
+      { source: "/ourservices/:path*", destination: "/", permanent: true },
       { source: "/page/:path*", destination: "/", permanent: true },
     ];
   },

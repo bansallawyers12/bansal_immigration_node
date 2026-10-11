@@ -27,5 +27,5 @@ export function LegalLayout({
 }
 
 export function legalUpdated() {
-  return new Intl.DateTimeFormat("en-AU", { month: "long", day: "2-digit", year: "numeric" }).format(new Date());
+  return "October 11, 2026";
 }

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+import { Photo } from "@/components/media/Photo";
 import { getHomeContent } from "@/lib/content";
 import { site } from "@/lib/site";
 
@@ -55,18 +57,14 @@ export default async function Home() {
   return (
     <>
       <section className="relative flex min-h-[70vh] items-center overflow-hidden">
-        <picture className="absolute inset-0 h-full w-full">
-          <source
-            type="image/avif"
-            srcSet="/img/homepage-480.avif 480w, /img/homepage-768.avif 768w, /img/homepage-1280.avif 1280w, /img/homepage.avif 1920w"
-            sizes="100vw"
-          />
-          <img
-            src="/img/homepage-768.jpg"
-            alt="Australian immigration consultation - Melbourne skyline"
-            className="h-full w-full object-cover"
-          />
-        </picture>
+        <Image
+          src="/img/homepage-768.jpg"
+          alt="Australian immigration consultation - Melbourne skyline"
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+        />
         <div className="absolute inset-0 bg-[rgba(30,58,138,0.7)]" />
         <div className="relative z-10 mx-auto w-full max-w-6xl px-4">
           <div className="max-w-md rounded-lg bg-white p-4 shadow-2xl">
@@ -150,7 +148,7 @@ export default async function Home() {
           <div className="grid gap-8 md:grid-cols-3">
             {home.blogs.map((blog) => (
               <article key={blog.id} className="rounded-lg bg-white p-6">
-                {blog.image ? <img src={blog.image} alt={blog.imageAlt ?? blog.title} className="mb-4 h-48 w-full rounded-lg object-cover" /> : null}
+                {blog.image ? <Photo src={blog.image} alt={blog.imageAlt ?? blog.title} className="mb-4 h-48 w-full rounded-lg object-cover" /> : null}
                 <h3 className="line-clamp-2 text-xl font-bold text-sg-navy">{blog.title}</h3>
                 <p className="mt-3 line-clamp-3 text-sg-medium-gray">{blog.shortDescription}</p>
                 <Link href={`/blogs/${blog.slug}`} className="mt-4 inline-block font-semibold text-sg-light-blue">
@@ -194,7 +192,7 @@ export default async function Home() {
           <h2 className="text-center text-4xl font-bold text-sg-navy">Meet Our Expert Team</h2>
           {lead ? (
             <div className="mx-auto mt-12 max-w-sm text-center">
-              {lead.image ? <img src={lead.image} alt={lead.name} className="mx-auto h-72 w-64 object-contain" /> : null}
+              {lead.image ? <Photo src={lead.image} alt={lead.name} className="mx-auto h-72 w-64 object-contain" /> : null}
               <h3 className="mt-4 text-2xl font-bold text-sg-navy">{lead.name}</h3>
               <p className="font-semibold text-sg-light-blue">
                 {lead.designation} {lead.marn ? `(MARN: ${lead.marn})` : ""}
@@ -205,7 +203,7 @@ export default async function Home() {
           <div className="mx-auto mt-8 grid max-w-5xl gap-8 md:grid-cols-2">
             {team.map((member) => (
               <div key={member.id} className="text-center">
-                {member.image ? <img src={member.image} alt={member.name} className="mx-auto h-72 w-64 object-contain" /> : null}
+                {member.image ? <Photo src={member.image} alt={member.name} className="mx-auto h-72 w-64 object-contain" /> : null}
                 <h3 className="mt-4 text-xl font-bold text-sg-navy">{member.name}</h3>
                 <p className="text-sm font-semibold text-sg-light-blue">
                   {member.designation} {member.marn ? `(MARN: ${member.marn})` : ""}

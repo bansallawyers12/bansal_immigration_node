@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Photo } from "@/components/media/Photo";
 import { getBlog } from "@/lib/content";
 import { sanitizeContent } from "@/lib/sanitize";
 import { seoTitle } from "@/lib/seo";
@@ -25,7 +26,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<Param
     <article className="mx-auto max-w-3xl px-4 py-12">
       <h1 className="text-4xl font-bold text-sg-navy">{post.title}</h1>
       {post.author ? <p className="mt-2 text-sm text-gray-500">{post.author}</p> : null}
-      {post.image ? <img src={post.image} alt={post.imageAlt ?? post.title} className="mt-6 w-full rounded-xl" /> : null}
+      {post.image ? <Photo src={post.image} alt={post.imageAlt ?? post.title} className="mt-6 w-full rounded-xl" /> : null}
       {html ? <div className="cms-content mt-8" dangerouslySetInnerHTML={{ __html: html }} /> : null}
     </article>
   );

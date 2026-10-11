@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { indianPccEnabled, site } from "@/lib/site";
+import { indianPccEnabled } from "@/lib/site";
 import { MobileNav } from "@/components/layout/MobileNav";
 
 const primary = [
@@ -33,11 +34,12 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-white shadow-md">
       <div className="relative mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/" className="shrink-0">
-          <img
+          <Image
             src="/img/logo/logo_transparent.avif"
             alt="Bansal Immigration"
             width={360}
             height={139}
+            priority
             className="h-10 w-auto rounded-lg border-2 border-sg-light-blue bg-white object-contain p-2 shadow-sm sm:h-12 lg:h-16"
           />
         </Link>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Photo } from "@/components/media/Photo";
 import { listStories } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export default async function SuccessStoriesPage() {
         {stories.map((story) => (
           <article key={story.id} className="rounded-xl bg-white p-5 shadow">
             {story.featured ? <p className="text-xs font-semibold uppercase text-sg-light-blue">Featured</p> : null}
-            {story.image ? <img src={story.image} alt="" className="mb-4 h-40 w-full rounded object-cover" /> : null}
+            {story.image ? <Photo src={story.image} alt={story.title} className="mb-4 h-40 w-full rounded object-cover" /> : null}
             <h2 className="text-xl font-bold text-sg-navy">
               <Link href={`/success-stories/${story.slug}`}>{story.title}</Link>
             </h2>

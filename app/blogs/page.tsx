@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Photo } from "@/components/media/Photo";
 import { listBlogs } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export default async function BlogsPage({
       <div className="mt-8 grid gap-6 md:grid-cols-3">
         {posts.map((post) => (
           <article key={post.id} className="rounded-xl bg-white p-5 shadow">
-            {post.image ? <img src={post.image} alt={post.imageAlt ?? post.title} className="mb-4 h-40 w-full rounded object-cover" /> : null}
+            {post.image ? <Photo src={post.image} alt={post.imageAlt ?? post.title} className="mb-4 h-40 w-full rounded object-cover" /> : null}
             {post.featured ? <p className="text-xs font-semibold uppercase text-sg-light-blue">Featured</p> : null}
             <h2 className="text-xl font-bold text-sg-navy">
               <Link href={`/blogs/${post.slug}`}>{post.title}</Link>
